@@ -1,0 +1,59 @@
+server:
+  port: 8110 #端口号
+  tomcat:
+    max-threads: 10  #tomcat 并发默认是200
+spring:
+  profiles:
+    active: dev #环境设置
+  application:
+    name: service-edu #服务名
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/video_edu?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+  #spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # nacos服务地址
+
+    #spring:
+    #  cloud:
+    sentinel:
+      transport:
+        port: 8081 #跟控制台交流的端口，随意指定一个未使用的端口即可
+        dashboard: localhost:8080 # 指定控制台服务的地址
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+#mybatis日志
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+service-oss: # 调用的提供者的名称
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+#  RoundRobinRule 轮询策略
+#  RandomRule     随机策略
+ribbon:
+  maxAutoRetries: 0 # 同一实例最大重试次数，不包括首次调用，默认0
+  maxAutoRetriesNextServer: 1 # 重试其他实例的最大重试次数，不包括首次所选的server，默认1
+  connectTimeout: 10000 #连接建立的超时时长，默认1秒
+  readTimeout;: 10000 #处理请求的超时时间，默认为1秒
+
+feign:
+  sentinel:
+    enabled: true
+logging:
+  level:
+    com.IT.service.edu.feign.OssFileService: debug #以什么级别监控哪个接口
+
+#逻辑删除配置
+  global-config:
+    db-config:
+      logic-delete-field: flag # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+
